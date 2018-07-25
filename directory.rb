@@ -14,7 +14,7 @@ def input_students
 
     if months.include?(cohort)
       students << { name: name, cohort: cohort.to_sym, hobbies: ["murder", "table tennis"], country_of_birth: :america, height: 178 }
-      puts "Now we have #{students.count} students"
+      puts students.length > 1 ? "Now we have #{students.count} students" : "Now we have #{students.count} student"
     else
       puts "sorry i didnt understand...."
     end
@@ -44,21 +44,27 @@ def print_students(students)
   puts "select a number of characters as the max length of the name or just return to print all names"
   max_chars = gets.chomp.to_i
 
-  x = 0
-  while x < students.length
-    result = "#{( x + 1 )}: #{students[x][:name]} (#{students[x][:cohort]} cohort)"
-    if letter.empty? && max_chars == 0
-      puts result.center(50)
-    elsif letter.empty? && max_chars != 0
-      puts result.center(50) if students[x][:name].size < (max_chars)
-    elsif !letter.empty? && max_chars == 0
-      puts result.center(50) if students[x][:name].start_with?(letter)
-    else
-      puts result.center(50) if students[x][:name].start_with?(letter) && students[x][:name].size < (max_chars - 1)
+
+
+  cohort_list(students).each do |cohort|
+    x = 0
+    while x < students.length
+      result = "#{( x + 1 )}: #{students[x][:name]} (#{students[x][:cohort]} cohort)"
+      if letter.empty? && max_chars == 0 && students[x][:cohort] == cohort
+        puts result.center(50)
+      elsif letter.empty? && max_chars != 0 && students[x][:cohort] == cohort
+        puts result.center(50) if students[x][:name].size < (max_chars)
+      elsif !letter.empty? && max_chars == 0 && students[x][:cohort] == cohort
+        puts result.center(50) if students[x][:name].start_with?(letter)
+      elsif students[x][:cohort] == cohort
+        puts result.center(50) if students[x][:name].start_with?(letter) && students[x][:name].size < (max_chars - 1)
+      end
+    x += 1
     end
-  x += 1
   end
 end
+
+
 
 
 def print_footer(names)
@@ -69,7 +75,6 @@ end
 students = input_students
 print_header
 print_students(students)
-p cohort_list(students)
 print_footer(students)
 
 
