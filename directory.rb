@@ -1,16 +1,26 @@
 def input_students
-  puts "Please enter the names of the students"
-  puts "To finish, just hit return twice"
+
   students = []
-  name = gets.chomp
-  while !name.empty? do
-    students << { name: name, cohort: :november, hobbies: ["murder", "table tennis"], country_of_birth: :america, height: 178 }
-    puts "Now we have #{students.count} students"
+  months = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"]
+
+  while true do
+    puts "Please enter the name of the student or type quit to exit"
     name = gets.chomp
+    break if name == 'quit'
+    if !name.empty?
+      puts "Please enter the cohort of the student"
+      cohort = gets.chomp.downcase
+    end
+
+    if months.include?(cohort)
+      students << { name: name, cohort: cohort.to_sym, hobbies: ["murder", "table tennis"], country_of_birth: :america, height: 178 }
+      puts "Now we have #{students.count} students"
+    else
+      puts "sorry i didnt understand...."
+    end
   end
   students
 end
-
 
 def print_header
   puts "The students of Villains Academy".center(50)
@@ -27,7 +37,6 @@ def print_students(students)
   puts "select a number of characters as the max length of the name or just return to print all names"
   max_chars = gets.chomp.to_i
 
-
   x = 0
   while x < students.length
     result = "#{( x + 1 )}: #{students[x][:name]} (#{students[x][:cohort]} cohort)"
@@ -43,7 +52,6 @@ def print_students(students)
   x += 1
   end
 end
-
 
 
 def print_footer(names)
