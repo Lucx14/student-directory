@@ -27,10 +27,17 @@ def print_header
   puts "-------------".center(50)
 end
 
+
+def cohort_list(students)
+  students.map { |student| student[:cohort] }.uniq
+end
+
+
+
 def print_students(students)
 
   puts "Filter for students whos names start with a specific letter?"
-  puts "Select a letter to filter by or just hit retrun to print all names"
+  puts "Select a letter to filter by or just hit return to skip"
   letter = gets .chomp
 
   puts "Filter for students by the length of their name?"
@@ -62,6 +69,7 @@ end
 students = input_students
 print_header
 print_students(students)
+p cohort_list(students)
 print_footer(students)
 
 
