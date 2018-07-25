@@ -45,21 +45,23 @@ def print_students(students)
   max_chars = gets.chomp.to_i
 
 
-
+  x = 0
   cohort_list(students).each do |cohort|
-    x = 0
-    while x < students.length
-      result = "#{( x + 1 )}: #{students[x][:name]} (#{students[x][:cohort]} cohort)"
-      if letter.empty? && max_chars == 0 && students[x][:cohort] == cohort
+    students.each_with_index do |student, i|
+      result = "#{( x + 1 )}: #{students[i][:name]} (#{students[i][:cohort]} cohort)"
+      if letter.empty? && max_chars == 0 && students[i][:cohort] == cohort
         puts result.center(50)
-      elsif letter.empty? && max_chars != 0 && students[x][:cohort] == cohort
-        puts result.center(50) if students[x][:name].size < (max_chars)
-      elsif !letter.empty? && max_chars == 0 && students[x][:cohort] == cohort
-        puts result.center(50) if students[x][:name].start_with?(letter)
-      elsif students[x][:cohort] == cohort
-        puts result.center(50) if students[x][:name].start_with?(letter) && students[x][:name].size < (max_chars - 1)
+        x += 1
+      elsif letter.empty? && max_chars != 0 && students[i][:cohort] == cohort
+        puts result.center(50) if students[i][:name].size < (max_chars)
+        x += 1
+      elsif !letter.empty? && max_chars == 0 && students[i][:cohort] == cohort
+        puts result.center(50) if students[i][:name].start_with?(letter)
+        x += 1
+      elsif students[i][:cohort] == cohort
+        puts result.center(50) if students[i][:name].start_with?(letter) && students[i][:name].size < (max_chars - 1)
+        x += 1
       end
-    x += 1
     end
   end
 end
