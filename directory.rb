@@ -4,11 +4,11 @@ def input_students
   months = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"]
   while true do
     puts "Please enter the name of the student or type quit to exit"
-    name = gets.chomp
+    name = STDIN.gets.chomp
     break if name == 'quit'
     if !name.empty?
       puts "Please enter the cohort of the student"
-      cohort = gets.chomp.downcase
+      cohort = STDIN.gets.chomp.downcase
     end
 
     if months.include?(cohort) && !name.empty?
@@ -46,11 +46,11 @@ def print_students
   if @students.length != 0
     puts "Filter for students whos names start with a specific letter?"
     puts "Select a letter to filter by or just hit return to skip"
-    letter = gets.delete_suffix("\n") #HAVE REPLACED CHOMP HERE WITH Delete_suffix("\n")
+    letter = STDIN.gets.delete_suffix("\n") #HAVE REPLACED CHOMP HERE WITH Delete_suffix("\n")
 
     puts "Filter for students by the length of their name?"
     puts "select a number of characters as the max length of the name or just return to print all names"
-    max_chars = gets.chomp.to_i
+    max_chars = STDIN.gets.chomp.to_i
 
     print_header #Calling the header here , it looks a bit better in the terminal
 
@@ -132,8 +132,8 @@ def save_students
 end
 
 
-def load_students
-  file = File.open("students.csv", "r")
+def load_students(filename = "students.csv")
+  file = File.open(filename, "r")
   file.readlines.each do |line|
     name, cohort = line.chomp.split(',')
     @students << { name: name, cohort: cohort.to_sym }
@@ -142,15 +142,30 @@ def load_students
 end
 
 
+def try_load_students
+
+  filename = ARGV.first # FIRST ARGUMENT FROM THE COMMAND LINE
+  return if filename.nil? # Get out the method if it isnt given
+  if File.exists?(filename) # If it exists
+    load_students(filename)
+    puts "Loaded #{@students.count} from #{filename}"
+  else
+    puts "Sorry #{filename} doesn't exist"
+    exit
+  end
+end
+
 
 
 def interactive_menu
   loop do
     print_menu
-    process(gets.chomp)
+    process(STDIN.gets.chomp)
   end
 end
 
+
+try_load_students
 interactive_menu
 
 
