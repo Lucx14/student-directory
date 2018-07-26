@@ -71,7 +71,7 @@ def print_students(students)
     x = 0
     cohort_list(students).each do |cohort|
       students.each_with_index do |student, i|
-        result = "#{( x + 1 )}: #{students[i][:name]}#{' '*((max_width_names(students) + 3) - (students[i][:name]).length)}(#{students[i][:cohort]} cohort)"
+        result = "#{( x + 1 )}: #{students[i][:name]}#{' '*((max_width_names(students) + 5) - (students[i][:name]).length)}(#{students[i][:cohort]} cohort)"
         if letter.empty? && max_chars == 0 && students[i][:cohort] == cohort
           puts result#.center(50)
           x += 1
