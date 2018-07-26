@@ -67,7 +67,11 @@ def print_students(students)
         end
       end
     end
+  else
+    print_header
   end
+
+
 
 end
 
@@ -80,7 +84,7 @@ def print_footer(names)
   puts
 end
 
-
+puts "Welcome to the Student Directory"
 students = input_students
 #print_header
 print_students(students)
