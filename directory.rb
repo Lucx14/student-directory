@@ -13,7 +13,7 @@ def input_students
     end
 
     if months.include?(cohort) && !name.empty?
-      students << { name: name, cohort: cohort.to_sym, hobbies: ["murder", "table tennis"], country_of_birth: :america, height: 178 }
+      students << { name: name, cohort: cohort.to_sym, hobbies: ["murder", "table tennis"], country_of_birth: :america, height: "6 foot 2 inches" }
       puts students.length > 1 ? "Now we have #{students.count} students" : "Now we have #{students.count} student"
     else
       puts "sorry i didnt understand...."
@@ -21,6 +21,26 @@ def input_students
   end
   students
 end
+
+
+def max_width_names(students)
+  columns = students.map { |details| details.values }.transpose
+  widths = columns.map do |column|
+    column.max_by { |word| word.length}.length
+  end
+  widths[0]
+end
+
+def max_width_cohorts(students)
+  columns = students.map { |details| details.values }.transpose
+  widths = columns.map do |column|
+    column.max_by { |word| word.length}.length
+  end
+  widths[1]
+end
+
+
+
 
 def print_header
   puts "The students of Villains Academy".center(50)
@@ -51,18 +71,18 @@ def print_students(students)
     x = 0
     cohort_list(students).each do |cohort|
       students.each_with_index do |student, i|
-        result = "#{( x + 1 )}: #{students[i][:name]} (#{students[i][:cohort]} cohort)"
+        result = "#{( x + 1 )}: #{students[i][:name]}#{' '*((max_width_names(students) + 3) - (students[i][:name]).length)}(#{students[i][:cohort]} cohort)"
         if letter.empty? && max_chars == 0 && students[i][:cohort] == cohort
-          puts result.center(50)
+          puts result#.center(50)
           x += 1
         elsif letter.empty? && max_chars != 0 && students[i][:cohort] == cohort
-          puts result.center(50) if students[i][:name].size < (max_chars)
+          puts result if students[i][:name].size < (max_chars)
           x += 1
         elsif !letter.empty? && max_chars == 0 && students[i][:cohort] == cohort
-          puts result.center(50) if students[i][:name].start_with?(letter)
+          puts result if students[i][:name].start_with?(letter)
           x += 1
         elsif students[i][:cohort] == cohort
-          puts result.center(50) if students[i][:name].start_with?(letter) && students[i][:name].size < (max_chars - 1)
+          puts result if students[i][:name].start_with?(letter) && students[i][:name].size < (max_chars - 1)
           x += 1
         end
       end
@@ -86,6 +106,7 @@ end
 
 puts "Welcome to the Student Directory"
 students = input_students
+
 #print_header
 print_students(students)
 print_footer(students)
