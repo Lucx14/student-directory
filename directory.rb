@@ -31,13 +31,7 @@ def max_width_names(students)
   widths[0]
 end
 
-def max_width_cohorts(students)
-  columns = students.map { |details| details.values }.transpose
-  widths = columns.map do |column|
-    column.max_by { |word| word.length}.length
-  end
-  widths[1]
-end
+
 
 
 
@@ -100,11 +94,43 @@ end
 
 #************************************************************************************
 
-puts "Welcome to the Student Directory"
-students = input_students
-print_students(students)
-print_footer(students)
+#puts "Welcome to the Student Directory"
+#students = input_students
+#print_students(students)
+#print_footer(students)
 
+
+
+def interactive_menu
+  students = []
+  loop do
+  #1. Print menu to the screen asking user what they would like to do
+    puts "1. Input the students"
+    puts "2. Show the students"
+    puts "9. Exit"
+  #2. read the input and save it to a variable
+    selection = gets.chomp
+  #3. do what the user has asked
+    case selection
+    when "1"
+      #INPUT THE STUDENTS
+      students = input_students
+    when "2"
+      #SHOW THE STUDENTS
+      print_students(students)
+      print_footer(students)
+    when "9"
+      exit #THIS WILL CAUSE THE PROGRAM TO TERMINATE
+    else
+      puts "I don't know what you mean, try again"
+    end
+
+  #4. repeat from step 1
+  end
+end
+
+
+interactive_menu
 
 
 =begin
