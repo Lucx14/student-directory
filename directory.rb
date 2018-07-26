@@ -56,7 +56,6 @@ end
 
 def print_students(students)
 
-
   if students.length != 0
     puts "Filter for students whos names start with a specific letter?"
     puts "Select a letter to filter by or just hit return to skip"
@@ -90,12 +89,7 @@ def print_students(students)
   else
     print_header
   end
-
-
-
 end
-
-
 
 
 def print_footer(names)
@@ -104,10 +98,10 @@ def print_footer(names)
   puts
 end
 
+#************************************************************************************
+
 puts "Welcome to the Student Directory"
 students = input_students
-
-#print_header
 print_students(students)
 print_footer(students)
 
