@@ -144,16 +144,16 @@ end
 
 
 def save_students(filename)
-  if File.exists?(filename) # IF IT EXISTS
+  if File.exist?(filename) # IF IT EXISTS
     # Open the file for writing
-    file = File.open(filename, "w")
-    # iterate over the array of students
-    @students.each do |student|
-      student_data = [student[:name], student[:cohort]]
-      csv_line = student_data.join(",")
-      file.puts csv_line
+    File.open(filename, "w") do |file| # reformatted file open and close into a do end block same below
+      # iterate over the array of students
+      @students.each do |student|
+        student_data = [student[:name], student[:cohort]]
+        csv_line = student_data.join(",")
+        file.puts csv_line
+      end
     end
-    file.close
     puts "Student(s) details saved"
   else
     file_error
@@ -163,13 +163,13 @@ end
 
 
 def load_students(filename = "students.csv")
-  if File.exists?(filename) # IF IT EXISTS
-    file = File.open(filename, "r")
-    file.readlines.each do |line|
-      name, cohort = line.chomp.split(',')
-      add_students(name, cohort)
+  if File.exist?(filename) # IF IT EXISTS
+    File.open(filename, "r") do |file|
+      file.readlines.each do |line|
+        name, cohort = line.chomp.split(',')
+        add_students(name, cohort)
+      end
     end
-    file.close
     puts "Student(s) details loaded"
   else
     file_error
@@ -185,7 +185,7 @@ def try_load_students
     load_students
     return
   end
-  if File.exists?(filename) # If it exists
+  if File.exist?(filename) # If it exists
     load_students(filename)
     puts "Loaded #{@students.count} from #{filename}"
   else
