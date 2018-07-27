@@ -1,3 +1,4 @@
+require 'csv'
 @students = [] #An empty array accessible to all methods
 @months = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"]
 
@@ -144,14 +145,10 @@ end
 
 
 def save_students(filename)
-  if File.exist?(filename) # IF IT EXISTS
-    # Open the file for writing
-    File.open(filename, "w") do |file| # reformatted file open and close into a do end block same below
-      # iterate over the array of students
+  if File.exist?(filename)
+    CSV.open(filename, "w") do |csv|
       @students.each do |student|
-        student_data = [student[:name], student[:cohort]]
-        csv_line = student_data.join(",")
-        file.puts csv_line
+        csv << [student[:name], student[:cohort]]
       end
     end
     puts "Student(s) details saved"
@@ -163,12 +160,10 @@ end
 
 
 def load_students(filename = "students.csv")
-  if File.exist?(filename) # IF IT EXISTS
-    File.open(filename, "r") do |file|
-      file.readlines.each do |line|
-        name, cohort = line.chomp.split(',')
-        add_students(name, cohort)
-      end
+  if File.exist?(filename)
+    CSV.foreach(filename) do |line|
+      name, cohort = line[0], line[1]
+      add_students(name, cohort)
     end
     puts "Student(s) details loaded"
   else
@@ -179,7 +174,6 @@ end
 
 
 def try_load_students
-
   filename = ARGV.first # FIRST ARGUMENT FROM THE COMMAND LINE
   if filename.nil? # Get out the method if it isnt given
     load_students
