@@ -198,11 +198,16 @@ def interactive_menu
 end
 
 
+
+puts File.basename(__FILE__)
+
 try_load_students
 interactive_menu
 
 
+
 =begin
+LIST OF EXAMPLE STUDENTS FOR REFERENCE
 puts "The students of Villains Academy"
 puts "-------------"
 puts "Dr. Hannibal Lecter"
