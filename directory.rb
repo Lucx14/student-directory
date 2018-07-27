@@ -34,19 +34,6 @@ def add_students(name, cohort)
 end
 
 
-
-
-def load_students(filename = "students.csv")
-  file = File.open(filename, "r")
-  file.readlines.each do |line|
-    name, cohort = line.chomp.split(',')
-    add_students(name, cohort)
-  end
-  file.close
-  puts "Student(s) details loaded"
-end
-
-
 def max_width_names
   columns = @students.map { |details| details.values }.transpose
   widths = columns.map do |column|
@@ -137,28 +124,57 @@ def process(selection)
   case selection
     when "1" then students = input_students
     when "2" then show_students
-    when "3" then save_students
-    when "4" then load_students
+    when "3" then save_students(choose_file)
+    when "4" then load_students(choose_file)
     when "9" then exit #THIS WILL CAUSE THE PROGRAM TO TERMINATE
   else
     puts "I don't know what you mean, try again"
   end
 end
 
-
-def save_students
-  # Open the file for writing
-  file = File.open("students.csv", "w")
-  # iterate over the array of students
-  @students.each do |student|
-    student_data = [student[:name], student[:cohort]]
-    csv_line = student_data.join(",")
-    file.puts csv_line
-  end
-  file.close
-  puts "Student(s) details saved"
+def choose_file
+  puts "Please choose a file"
+  STDIN.gets.chomp
 end
 
+def file_error
+  puts "sorry that file does not exist, please try again"
+end
+
+
+
+def save_students(filename)
+  if File.exists?(filename) # IF IT EXISTS
+    # Open the file for writing
+    file = File.open(filename, "w")
+    # iterate over the array of students
+    @students.each do |student|
+      student_data = [student[:name], student[:cohort]]
+      csv_line = student_data.join(",")
+      file.puts csv_line
+    end
+    file.close
+    puts "Student(s) details saved"
+  else
+    file_error
+  end
+end
+
+
+
+def load_students(filename = "students.csv")
+  if File.exists?(filename) # IF IT EXISTS
+    file = File.open(filename, "r")
+    file.readlines.each do |line|
+      name, cohort = line.chomp.split(',')
+      add_students(name, cohort)
+    end
+    file.close
+    puts "Student(s) details loaded"
+  else
+    file_error
+  end
+end
 
 
 
