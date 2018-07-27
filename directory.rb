@@ -21,6 +21,7 @@ def input_students
     end
     if @months.include?(cohort) && !name.empty?
       add_students(name, cohort)
+      puts "#{name} was added to the list"
       puts @students.length > 1 ? "Now we have #{@students.count} students" : "Now we have #{@students.count} student"
     else
       puts "sorry i didnt understand...."
@@ -42,6 +43,7 @@ def load_students(filename = "students.csv")
     add_students(name, cohort)
   end
   file.close
+  puts "Student(s) details loaded"
 end
 
 
@@ -154,6 +156,7 @@ def save_students
     file.puts csv_line
   end
   file.close
+  puts "Student(s) details saved"
 end
 
 
