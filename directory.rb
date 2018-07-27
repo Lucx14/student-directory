@@ -1,23 +1,47 @@
 @students = [] #An empty array accessible to all methods
+@months = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"]
+
+def get_name
+  puts "Please enter the name of the student or type quit to exit"
+  STDIN.gets.chomp
+end
+
+def get_cohort
+  puts "Please enter the cohort of the student"
+  STDIN.gets.chomp.downcase
+end
+
 
 def input_students
-  months = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"]
   while true do
-    puts "Please enter the name of the student or type quit to exit"
-    name = STDIN.gets.chomp
+    name = get_name
     break if name == 'quit'
     if !name.empty?
-      puts "Please enter the cohort of the student"
-      cohort = STDIN.gets.chomp.downcase
+      cohort = get_cohort
     end
-
-    if months.include?(cohort) && !name.empty?
-      @students << { name: name, cohort: cohort.to_sym }
+    if @months.include?(cohort) && !name.empty?
+      add_students(name, cohort)
       puts @students.length > 1 ? "Now we have #{@students.count} students" : "Now we have #{@students.count} student"
     else
       puts "sorry i didnt understand...."
     end
   end
+end
+
+def add_students(name, cohort)
+  @students << { name: name, cohort: cohort.to_sym }
+end
+
+
+
+
+def load_students(filename = "students.csv")
+  file = File.open(filename, "r")
+  file.readlines.each do |line|
+    name, cohort = line.chomp.split(',')
+    add_students(name, cohort)
+  end
+  file.close
 end
 
 
@@ -41,41 +65,47 @@ def cohort_list
 end
 
 
-def print_students
+def letter_filter
+  puts "Filter for students whos names start with a specific letter?"
+  puts "Select a letter to filter by or just hit return to skip"
+  STDIN.gets.delete_suffix("\n") #HAVE REPLACED CHOMP HERE WITH Delete_suffix("\n")
+end
 
-  if @students.length != 0
-    puts "Filter for students whos names start with a specific letter?"
-    puts "Select a letter to filter by or just hit return to skip"
-    letter = STDIN.gets.delete_suffix("\n") #HAVE REPLACED CHOMP HERE WITH Delete_suffix("\n")
+def name_length_filter
+  puts "Filter for students by the length of their name?"
+  puts "select a number of characters as the max length of the name or just return to print all names"
+  STDIN.gets.chomp.to_i
+end
 
-    puts "Filter for students by the length of their name?"
-    puts "select a number of characters as the max length of the name or just return to print all names"
-    max_chars = STDIN.gets.chomp.to_i
 
-    print_header #Calling the header here , it looks a bit better in the terminal
+def students_generator
+  letter = letter_filter
+  max_chars = name_length_filter
+  print_header #Calling the header here , it looks a bit better in the terminal
 
-    x = 0
-    cohort_list.each do |cohort|
-      @students.each_with_index do |student, i|
-        result = "#{( x + 1 )}: #{@students[i][:name]}#{' '*((max_width_names + 5) - (@students[i][:name]).length)}(#{@students[i][:cohort]} cohort)"
-        if letter.empty? && max_chars == 0 && @students[i][:cohort] == cohort
-          puts result
-          x += 1
-        elsif letter.empty? && max_chars != 0 && @students[i][:cohort] == cohort
-          puts result if @students[i][:name].size < (max_chars)
-          x += 1
-        elsif !letter.empty? && max_chars == 0 && @students[i][:cohort] == cohort
-          puts result if @students[i][:name].start_with?(letter)
-          x += 1
-        elsif @students[i][:cohort] == cohort
-          puts result if @students[i][:name].start_with?(letter) && @students[i][:name].size < (max_chars - 1)
-          x += 1
-        end
+  x = 0
+  cohort_list.each do |cohort|
+    @students.each_with_index do |student, i|
+      result = "#{( x + 1 )}: #{@students[i][:name]}#{' '*((max_width_names + 5) - (@students[i][:name]).length)}(#{@students[i][:cohort]} cohort)"
+      if letter.empty? && max_chars == 0 && @students[i][:cohort] == cohort
+        puts result
+        x += 1
+      elsif letter.empty? && max_chars != 0 && @students[i][:cohort] == cohort
+        puts result if @students[i][:name].size < (max_chars)
+        x += 1
+      elsif !letter.empty? && max_chars == 0 && @students[i][:cohort] == cohort
+        puts result if @students[i][:name].start_with?(letter)
+        x += 1
+      elsif @students[i][:cohort] == cohort
+        puts result if @students[i][:name].start_with?(letter) && @students[i][:name].size < (max_chars - 1)
+        x += 1
       end
     end
-  else
-    print_header
   end
+end
+
+def print_students
+  @students.length != 0 ? students_generator : print_header
 end
 
 
@@ -103,16 +133,11 @@ end
 
 def process(selection)
   case selection
-  when "1"
-    students = input_students
-  when "2"
-    show_students
-  when "3"
-    save_students
-  when "4"
-    load_students
-  when "9"
-    exit #THIS WILL CAUSE THE PROGRAM TO TERMINATE
+    when "1" then students = input_students
+    when "2" then show_students
+    when "3" then save_students
+    when "4" then load_students
+    when "9" then exit #THIS WILL CAUSE THE PROGRAM TO TERMINATE
   else
     puts "I don't know what you mean, try again"
   end
@@ -132,20 +157,15 @@ def save_students
 end
 
 
-def load_students(filename = "students.csv")
-  file = File.open(filename, "r")
-  file.readlines.each do |line|
-    name, cohort = line.chomp.split(',')
-    @students << { name: name, cohort: cohort.to_sym }
-  end
-  file.close
-end
 
 
 def try_load_students
 
   filename = ARGV.first # FIRST ARGUMENT FROM THE COMMAND LINE
-  return if filename.nil? # Get out the method if it isnt given
+  if filename.nil? # Get out the method if it isnt given
+    load_students
+    return
+  end
   if File.exists?(filename) # If it exists
     load_students(filename)
     puts "Loaded #{@students.count} from #{filename}"
