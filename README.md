@@ -6,7 +6,16 @@ The script allows you to manage students enrolled at Makers Academy. It stores e
 
 ## How to use ##
 
+
 ```shell
- ruby directory.rb
- ```
+git clone https://github.com/Lucx14/student-directory.git
+```
+Run the script:
+```shell
+$ cd student-directory
+$ ruby directory.rb
+```
+
+
+
 
