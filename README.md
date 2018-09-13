@@ -8,7 +8,7 @@ The script allows you to manage students enrolled at Makers Academy. It stores e
 
 
 ```shell
-git clone https://github.com/Lucx14/student-directory.git
+git clone https://github.com/Lucx14/student-directory
 ```
 Run the script:
 ```shell
